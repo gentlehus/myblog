@@ -1,0 +1,32 @@
+apiVersion: skaffold/v1alpha2
+kind: Config
+build:
+  tagPolicy:
+    sha256: {}
+  artifacts:
+  - imageName: pshost01:5000/study/mydjango
+    workspace: .
+    docker:
+      dockerfilePath: ./kubernetes/docker_dev/Dockerfile
+  local:
+    skipPush: true
+deploy:
+  kubectl:
+    manifests:
+    - ./kubernetes/helm/templates/deployments.yaml
+profiles:
+  - name: release
+    build:
+      artifacts:
+      - imageName: pshost01:5000/study/mydjango
+        workspace: .
+        docker:
+          dockerfilePath: ./kubernetes/docker_dev/Dockerfile
+      local:
+        skipPush: false
+      tagPolicy:
+        gitCommit: {}
+    deploy:
+      kubectl:
+        manifests:
+        - ./kubernetes/helm/templates/deployments.yaml

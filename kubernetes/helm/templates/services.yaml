@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-dev
+  namespace: myblog-prod
+spec:
+  selector:
+    name: django-dev
+  ports:
+  - port: 8100
+    targetPort: 8080
+    protocol: TCP
+    name: django-server
+  - port: 8101
+    targetPort: 8888
+    protocol: TCP
+    name: jupyter
+  type: LoadBalancer

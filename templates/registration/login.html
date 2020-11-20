@@ -1,0 +1,47 @@
+{% extends 'blogs/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div id="index_top">
+    <div id="top_catch">
+        {% include 'blogs/catch.html' %}
+    </div>
+    <div class="pick_up effect">
+        <div id="content_title"> サインイン </div>
+        <div class="form_area" id="login">
+            <form method="post" action="{% url 'accounts:login' %}">
+                {% csrf_token %}
+                {% for item in form %}
+                <div class="form-group login" id="{{ item.label }}">
+                    {{ item }}
+                    <label class="label" for="{{ item.id_for_label }}">{{ item.label }}:</label>
+                </div>
+                {% endfor %}
+                <div class="form-group login" id="buttton">
+                    <input class="form-btn" type="submit" value="SignIn" />
+                    <input type="hidden" name="next" value="{{ next }}" />
+                </div>
+            </form>
+            
+            {% if form.errors %}
+            <div class="error_message" id="login">
+                <p>ユーザ名とパスワードが一致しません<p>
+            </div>
+            {% endif %}
+
+            {% if next %}
+            <div class="error_message" id="login">
+                {% if user.is_authenticated %}
+                <p>閲覧権限がないユーザです</p>
+                {% else %}
+                <p>続行するにはログインしてください</p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+            {# Assumes you setup the password_reset view in your URLconf #}
+            {# <p><a href="{% url 'password_reset' %}">Lost password?</a></p> #}
+    </div>
+</div>
+{% endblock %}
